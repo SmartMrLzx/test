@@ -16,9 +16,9 @@ AimRobotPunctureWidget::~AimRobotPunctureWidget()
 
 void AimRobotPunctureWidget::UpdatePathInfoLabelText(int pathidx, float pathdis)
 {
-	this->mCurPathIdx = pathidx;
-	QString pathtext = QString("·��  ") + QString::number(pathidx);
-	QString path_detail = pathtext + QString("��") + QString("%1").arg(pathdis);
+	this->mCurPathIdx = pathidx;       //注释
+	QString pathtext = QString("Â·¾¶  ") + QString::number(pathidx);
+	QString path_detail = pathtext + QString("£º") + QString("%1").arg(pathdis);
 	if (!mTextLabelLt.isEmpty())
 	{
 		if (mTextLabelLt.at(RPW_PathTitleDetail_Lbl))
@@ -313,8 +313,8 @@ void AimRobotPunctureWidget::InitTableWdtShow()
 			mpTable->item(i, 0)->setTextColor(QColor(255, 255, 255));
 
 			float dis = m_pPathList->at(i)->pathDis;
-			QString pathtext = QString("·��  ") + QString::number(i + 1);
-			QString path_detail = pathtext + QString("��") + QString("%1").arg(dis);
+			QString pathtext = QString("Â·¾¶  ") + QString::number(i + 1);
+			QString path_detail = pathtext + QString("£º") + QString("%1").arg(dis);
 			mTableInfoList.append(path_detail);
 			mpTable->item(i, 0)->setText(path_detail);
 		}
