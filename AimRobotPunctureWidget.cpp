@@ -5,8 +5,8 @@
 AimRobotPunctureWidget::AimRobotPunctureWidget(QWidget *parent)
 	: QWidget(parent)
 {
-	InitMenbers();
-	CreateCtrls();
+	InitMenbers();           //初始化成员
+	CreateCtrls();           //创建控制
 }
 
 AimRobotPunctureWidget::~AimRobotPunctureWidget()
@@ -14,12 +14,12 @@ AimRobotPunctureWidget::~AimRobotPunctureWidget()
 
 }
 
-void AimRobotPunctureWidget::UpdatePathInfoLabelText(int pathidx, float pathdis)
+void AimRobotPunctureWidget::UpdatePathInfoLabelText(int pathidx, float pathdis)         //更新路径信息标签文字
 {
-	this->mCurPathIdx = pathidx;       //注释
-	QString pathtext = QString("Â·¾¶  ") + QString::number(pathidx);
-	QString path_detail = pathtext + QString("£º") + QString("%1").arg(pathdis);
-	if (!mTextLabelLt.isEmpty())
+	this->mCurPathIdx = pathidx;       //路径索引初始化
+	QString pathtext = QString("路径 ") + QString::number(pathidx);                     //路径文字=“路径”+路径索引
+	QString path_detail = pathtext + QString("：") + QString("%1").arg(pathdis);        //路径细节=路径文字：路径距离
+	if (!mTextLabelLt.isEmpty())           //判断文字标签是否为空，不为空则执行下面代码
 	{
 		if (mTextLabelLt.at(RPW_PathTitleDetail_Lbl))
 		{
@@ -32,18 +32,18 @@ void AimRobotPunctureWidget::UpdatePathInfoLabelText(int pathidx, float pathdis)
 	}
 }
 
-void AimRobotPunctureWidget::SetPathListPt(QList<T_RobotPuncturePathCtrl*>* pathlist)
+void AimRobotPunctureWidget::SetPathListPt(QList<T_RobotPuncturePathCtrl*>* pathlist)          //设置路径列表   
 {
-	this->m_pPathList = pathlist;
-	if (m_pPathList)
+	this->m_pPathList = pathlist;         //路径列表赋值
+	if (m_pPathList)                      
 	{
-		InitTableWdtShow();
+		InitTableWdtShow();           //初始化表格部件并显示
 	}
 }
 
-void AimRobotPunctureWidget::resizeEvent(QResizeEvent* event)
+void AimRobotPunctureWidget::resizeEvent(QResizeEvent* event)          //重置大小
 {
-	LayoutCtrls();
+	LayoutCtrls();            //布局控制
 	minit = false;
 	QWidget::resizeEvent(event);
 }
@@ -70,7 +70,7 @@ void AimRobotPunctureWidget::paintEvent(QPaintEvent* event)
 	QWidget::paintEvent(event);
 }
 
-void AimRobotPunctureWidget::LayoutWdts(QWidget * pwdt, double * pRectRate)
+void AimRobotPunctureWidget::LayoutWdts(QWidget * pwdt, double * pRectRate)          //布局控件
 {
 	if (pwdt == 0)return;
 	int width = this->width();
