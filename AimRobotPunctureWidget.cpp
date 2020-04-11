@@ -16,78 +16,78 @@ AimRobotPunctureWidget::~AimRobotPunctureWidget()
 
 void AimRobotPunctureWidget::UpdatePathInfoLabelText(int pathidx, float pathdis)         //更新路径信息标签文字
 {
-	this->mCurPathIdx = pathidx;       //路径索引初始化
+	this->mCurPathIdx = pathidx;       //获取路径索引
 	QString pathtext = QString("路径 ") + QString::number(pathidx);                     //路径文字=“路径”+路径索引
 	QString path_detail = pathtext + QString("：") + QString("%1").arg(pathdis);        //路径细节=路径文字：路径距离
-	if (!mTextLabelLt.isEmpty())           //判断文字标签是否为空，不为空则执行下面代码
+	if (!mTextLabelLt.isEmpty())           //判断文字label列表是否为空，不为空则执行下面代码
 	{
 		if (mTextLabelLt.at(RPW_PathTitleDetail_Lbl))
 		{
-			mTextLabelLt.at(RPW_PathTitleDetail_Lbl)->setText(pathtext);
+			mTextLabelLt.at(RPW_PathTitleDetail_Lbl)->setText(pathtext);      //设置路径文字
 		}
 		if (mTextLabelLt.at(RPW_PathMsg_Lbl))
 		{
-			mTextLabelLt.at(RPW_PathMsg_Lbl)->setText(path_detail);
+			mTextLabelLt.at(RPW_PathMsg_Lbl)->setText(path_detail);           //设置路径细节
 		}
 	}
 }
 
 void AimRobotPunctureWidget::SetPathListPt(QList<T_RobotPuncturePathCtrl*>* pathlist)          //设置路径列表   
 {
-	this->m_pPathList = pathlist;         //路径列表赋值
+	this->m_pPathList = pathlist;         //获取路径列表
 	if (m_pPathList)                      
 	{
-		InitTableWdtShow();           //初始化表格部件并显示
+		InitTableWdtShow();           //如果路径列表不为空，则初始化表格部件并显示
 	}
 }
 
-void AimRobotPunctureWidget::resizeEvent(QResizeEvent* event)          //重置大小
+void AimRobotPunctureWidget::resizeEvent(QResizeEvent* event) 
 {
 	LayoutCtrls();            //布局控制
-	minit = false;
-	QWidget::resizeEvent(event);
+	minit = false;            //未初始化
+	QWidget::resizeEvent(event);    //
 }
 
 void AimRobotPunctureWidget::paintEvent(QPaintEvent* event)
 {
-	RPW_ImgLabel_Type type[] = { RPW_SetTargetPt_Lbl,RPW_SetIntoPt_Lbl };
-	RPW_StrImgOrder img[] = { RPW_Target_Image,RPW_Into_Image };
+	RPW_ImgLabel_Type type[] = { RPW_SetTargetPt_Lbl,RPW_SetIntoPt_Lbl };        //图像label类型：设置目标点，设置靶点
+	RPW_StrImgOrder img[] = { RPW_Target_Image,RPW_Into_Image };                 //图像次序：目标点图像，靶点图像
 	if (!minit)
 	{
-		minit = true;
+		minit = true;   //如果没有初始化，则进行初始化并将初始化判据设置为true
 		
-		int size = mImgLabelLt.size();
+		int size = mImgLabelLt.size();        //获取图像label列表的大小
 		for (int i = 0; i < size; i++)
 		{
-			this->SetLabelImage(mImgLabelLt.at(i), img[i]);
+			this->SetLabelImage(mImgLabelLt.at(i), img[i]);     //遍历图像label列表，设置图像label的图像
 		}
 	}
 
 	QStyleOption opt;
 	opt.init(this);
 	QPainter p(this);
-	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+	style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);    //设置背景颜色
 	QWidget::paintEvent(event);
 }
 
-void AimRobotPunctureWidget::LayoutWdts(QWidget * pwdt, double * pRectRate)          //布局控件
+void AimRobotPunctureWidget::LayoutWdts(QWidget * pwdt, double * pRectRate)          //摆放部件，需传递部件及位置信息
 {
-	if (pwdt == 0)return;
-	int width = this->width();
-	int height = this->height();
+	if (pwdt == 0)return;      //无部件则返回
+	int width = this->width();     //获取宽度
+	int height = this->height();   //获取高度
 	QRect rc(pRectRate[0] * width, pRectRate[1] * height,
 		pRectRate[2] * width, pRectRate[3] * height);
-	pwdt->setGeometry(rc);
+	pwdt->setGeometry(rc);            //摆放窗口部件
 }
 
-void AimRobotPunctureWidget::LayoutCtrls()
+void AimRobotPunctureWidget::LayoutCtrls()         //布局控制
 {
-	if (!mTextLabelLt.isEmpty())
+	if (!mTextLabelLt.isEmpty())            //判断文字label列表是否为空
 	{
-		int size = mTextLabelLt.size();
+		int size = mTextLabelLt.size();      //获取文字label列表的数量
 		for (int i = 0; i < size; i++)
 		{
-			LayoutWdts(mTextLabelLt.at(i), &RPW_TextLbl_Rect[i][0]);
+			LayoutWdts(mTextLabelLt.at(i), &RPW_TextLbl_Rect[i][0]);         //摆放文字label
 		}
 	}
 
@@ -128,18 +128,18 @@ void AimRobotPunctureWidget::LayoutCtrls()
 
 }
 
-void AimRobotPunctureWidget::InitMenbers()
+void AimRobotPunctureWidget::InitMenbers()        //初始化成员
 {
-	minit = false;
-	mpTable = NULL;
-	mTableCtrl.TableRowCount = 0;
-	mCurPathIdx = 0;
-	m_pPathList = NULL;
+	minit = false;                     //初始化判据设置为false
+	mpTable = NULL;                    //表格指针置为空指针
+	mTableCtrl.TableRowCount = 0;      //表格行数置零
+	mCurPathIdx = 0;                   //当前路径索引置零
+	m_pPathList = NULL;                //路径列表指针置零
 }
 
-void AimRobotPunctureWidget::CreateCtrls()
+void AimRobotPunctureWidget::CreateCtrls()    //创建控制
 {
-	CreateTextLabel();
+	CreateTextLabel();      /
 	CreateImgLabel();
 	CreateTextBtns();
 	CreateImgBtns();
@@ -148,10 +148,10 @@ void AimRobotPunctureWidget::CreateCtrls()
 
 void AimRobotPunctureWidget::CreateTextLabel()
 {
-	RPW_TextLabel_Type type[] = { RPW_PathTitle_Lbl ,RPW_PathTitleDetail_Lbl ,RPW_PathMsg_Lbl };
-	RPW_TextType text[] = { RPW_Title_Text ,RPW_TitleDetail_Text,RPW_TitleDetail_Text };
-	RPW_StyleSheet_Type stylesheet[] = { RPW_Common_Style ,RPW_FrameLbl_Style ,RPW_FrameLbl_Style };
-	QColor textcolor(RPW_TextColor[RPW_Text_Color][Aim_RED],
+	RPW_TextLabel_Type type[] = { RPW_PathTitle_Lbl ,RPW_PathTitleDetail_Lbl ,RPW_PathMsg_Lbl };          //文字label类型：路径标题label，路径标题细节label，路径信息label
+	RPW_TextType text[] = { RPW_Title_Text ,RPW_TitleDetail_Text,RPW_TitleDetail_Text };                  //文本类型：标题，标题细节，？？
+	RPW_StyleSheet_Type stylesheet[] = { RPW_Common_Style ,RPW_FrameLbl_Style ,RPW_FrameLbl_Style };      //样式类型：普通类型，
+	QColor textcolor(RPW_TextColor[RPW_Text_Color][Aim_RED],      //文字颜色
 		RPW_TextColor[RPW_Text_Color][Aim_GREEN],
 		RPW_TextColor[RPW_Text_Color][Aim_BLUE]);
 
@@ -160,32 +160,32 @@ void AimRobotPunctureWidget::CreateTextLabel()
 	fontorder = 1;
 #endif
 
-	QFont font(FontTypeStr[fontorder], RPW_Text_fsize, QFont::Normal);
+	QFont font(FontTypeStr[fontorder], RPW_Text_fsize, QFont::Normal);    //设置字体
 
-	int size = sizeof(type) / sizeof(RPW_TextLabel_Type);
-	for (int i = 0; i < size; i++)
+	int size = sizeof(type) / sizeof(RPW_TextLabel_Type);      //textlabel类型总数
+	for (int i = 0; i < size; i++)                             //遍历
 	{
-		QLabel* plabel = new QLabel(this);
-		plabel->setObjectName("plabel");
-		QPalette pe;
-		pe.setColor(QPalette::WindowText, textcolor);
-		plabel->setFont(font);
-		plabel->setPalette(pe);
-		plabel->setStyleSheet(QString("#plabel") + RPW_StyleSheet_TextStr[stylesheet[i]]);
-		plabel->setText(QString(RPW_TextStr[text[i] + fontorder]));
-		mTextLabelLt.append(plabel);
+		QLabel* plabel = new QLabel(this);                 //创建新label
+		plabel->setObjectName("plabel");                   //设置对象名：plabel
+		QPalette pe;                                       //创建调色板对象
+		pe.setColor(QPalette::WindowText, textcolor);      //设置调色板颜色
+		plabel->setFont(font);                             //设置所用字体
+		plabel->setPalette(pe);                            //设置所用调色板
+		plabel->setStyleSheet(QString("#plabel") + RPW_StyleSheet_TextStr[stylesheet[i]]);        //设置样式
+		plabel->setText(QString(RPW_TextStr[text[i] + fontorder]));        //设置文本
+		mTextLabelLt.append(plabel);              //将新label添加到文字label列表
 	}
 }
 
-void AimRobotPunctureWidget::CreateImgLabel()
+void AimRobotPunctureWidget::CreateImgLabel()              
 {
-	RPW_ImgLabel_Type type[] = { RPW_SetTargetPt_Lbl,RPW_SetIntoPt_Lbl };
+	RPW_ImgLabel_Type type[] = { RPW_SetTargetPt_Lbl,RPW_SetIntoPt_Lbl };         //图像label类型：靶点label，入针点label
 
-	int size = sizeof(type) / sizeof(RPW_ImgLabel_Type);
+	int size = sizeof(type) / sizeof(RPW_ImgLabel_Type);        //遍历
 	for (int i = 0; i < size; i++)
 	{
-		QLabel* imglabel = new QLabel(this);
-		mImgLabelLt.append(imglabel);
+		QLabel* imglabel = new QLabel(this);          //创建新的imglabel
+		mImgLabelLt.append(imglabel);                 //将新的imglabel添加到图像label列表
 	}
 
 }
@@ -197,51 +197,51 @@ void AimRobotPunctureWidget::CreateTextBtns()
 	fontorder = 1;
 #endif
 
-	RPW_TextBtn_Type type[] = 
+	RPW_TextBtn_Type type[] =                  //文本按钮类型
 	{
-		RPW_SetTargetPt_Btn,
-		RPW_SetIntoPt_Btn,
-		RPW_Clear_Btn,
-		RPW_Done_Btn
+		RPW_SetTargetPt_Btn,               //设置靶点按钮
+		RPW_SetIntoPt_Btn,                 //设置入针点按钮
+		RPW_Clear_Btn,                     //清空按钮
+		RPW_Done_Btn                       //完成按钮
 	};
 
-	RPW_TextType text[] =
+	RPW_TextType text[] =                      //文本类型
 	{
-		RPW_SetTar_BtnText,
-		RPW_SetInto_BtnText,
-		RPW_Clear_BtnText,
-		RPW_Done_BtnText 
+		RPW_SetTar_BtnText,                //设置靶点按钮的文本
+		RPW_SetInto_BtnText,               //设置入针点按钮的文本
+		RPW_Clear_BtnText,                 //清空按钮的文本
+		RPW_Done_BtnText                   //完成按钮的文本
 	};
-	QColor color(RPW_TextColor[RPW_Text_Color][Aim_RED],
+	QColor color(RPW_TextColor[RPW_Text_Color][Aim_RED],     //创建新颜色
 		RPW_TextColor[RPW_Text_Color][Aim_GREEN],
 		RPW_TextColor[RPW_Text_Color][Aim_BLUE]);
-	QFont font(FontTypeStr[fontorder], RPW_Text_fsize, QFont::Normal);
-	int size = sizeof(type) / sizeof(RPW_TextBtn_Type);
+	QFont font(FontTypeStr[fontorder], RPW_Text_fsize, QFont::Normal);       //创建新字体
+	int size = sizeof(type) / sizeof(RPW_TextBtn_Type);        //遍历
 	for (int i = 0; i < size; i++)
 	{
-		AimPushButton *btn = new AimPushButton(type[i], this);
-		btn->setObjectName("textbtn");
-		btn->setStyleSheet(QString("#textbtn") + RPW_StyleSheet_TextStr[RPW_FrameLbl_Style]);
-		btn->SetTextAlignFlag(Qt::AlignCenter);
-		btn->SetTextConfig(&QString(RPW_TextStr[text[i] + fontorder]), &font, &font, &color, &color);
-		connect(btn, &AimPushButton::AimBtnClick, this, &AimRobotPunctureWidget::AimPushBtnClick);
-		mTextBtnLt.append(btn);
+		AimPushButton *btn = new AimPushButton(type[i], this);        //创建新按钮
+		btn->setObjectName("textbtn");                                //设置对象名：textbtn
+		btn->setStyleSheet(QString("#textbtn") + RPW_StyleSheet_TextStr[RPW_FrameLbl_Style]);     //设置样式
+		btn->SetTextAlignFlag(Qt::AlignCenter);             //设置对齐方式
+		btn->SetTextConfig(&QString(RPW_TextStr[text[i] + fontorder]), &font, &font, &color, &color);      //
+		connect(btn, &AimPushButton::AimBtnClick, this, &AimRobotPunctureWidget::AimPushBtnClick);      //连接槽函数
+		mTextBtnLt.append(btn);      //将按钮添加到列表
 	}
 }
 
 void AimRobotPunctureWidget::CreateImgBtns()
 {
-	RPW_ImgBtn_Type type[] = { RPW_AddPath_Btn,RPW_DeletePath_Btn };
-	RPW_StrImgOrder img[] = { RPW_AddPath_Image,RPW_Delete_Image };
-	int size = sizeof(type) / sizeof(RPW_ImgBtn_Type);
+	RPW_ImgBtn_Type type[] = { RPW_AddPath_Btn,RPW_DeletePath_Btn };         //imglabel类型：添加路径按钮，删除路径按钮
+	RPW_StrImgOrder img[] = { RPW_AddPath_Image,RPW_Delete_Image };          //图像次序：添加路径图像，删除路径图像
+	int size = sizeof(type) / sizeof(RPW_ImgBtn_Type);          //遍历
 	for (int i = 0; i < size; i++)
-	{
-		AimPushButton* pbtn = new AimPushButton(type[i], this);
-		QPixmap normalpix(RPW_ImgPathStr[img[i]]);
+	{ 
+		AimPushButton* pbtn = new AimPushButton(type[i], this);          //创建新按钮
+		QPixmap normalpix(RPW_ImgPathStr[img[i]]);                       //..
 		pbtn->SetIconPixmap(normalpix, ICON_Normal);
 		pbtn->ShowIconPixmap(ICON_Normal);
-		connect(pbtn, &AimPushButton::AimBtnClick, this, &AimRobotPunctureWidget::AimPushBtnClick);
-		mImgBtnLt.append(pbtn);
+		connect(pbtn, &AimPushButton::AimBtnClick, this, &AimRobotPunctureWidget::AimPushBtnClick);     //连接槽函数
+		mImgBtnLt.append(pbtn);           //将按钮添加到列表
 	}
 }
 
@@ -253,27 +253,27 @@ void AimRobotPunctureWidget::CreateTableWdt()
 #endif
 	if (mpTable == NULL)
 	{
-		QTableWidget* ptable = new QTableWidget(this);
-		ptable->setColumnCount(RPW_Table_Column);
-		ptable->setSelectionBehavior(QAbstractItemView::SelectRows);
-		ptable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-		QHeaderView *verticalhead = ptable->verticalHeader();
-		verticalhead->setHidden(true);
-		QHeaderView *horizontalhead = ptable->horizontalHeader();
-		horizontalhead->setHidden(true);
+		QTableWidget* ptable = new QTableWidget(this);       //创建新的QTableWidget对象：ptable
+		ptable->setColumnCount(RPW_Table_Column);            //设置table列数
+		ptable->setSelectionBehavior(QAbstractItemView::SelectRows);    //设置选择行为
+		ptable->setEditTriggers(QAbstractItemView::NoEditTriggers);     //设置编辑触发
+		QHeaderView *verticalhead = ptable->verticalHeader();           //表头管理
+		verticalhead->setHidden(true);                                  //隐藏垂直方向表头
+		QHeaderView *horizontalhead = ptable->horizontalHeader();       
+		horizontalhead->setHidden(true);                                //隐藏水平方向表头
 
-		ptable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-		ptable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-		ptable->setFocusPolicy(Qt::NoFocus);
-		ptable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-		ptable->setSelectionMode(QAbstractItemView::SingleSelection);
-		ptable->setRowCount(mTableCtrl.TableRowCount);
-		ptable->setObjectName("table");
-		ptable->setStyleSheet(QString("#table") + QString(RPW_StyleSheet_TextStr[RPW_Table_Style]));
+		ptable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);     //关闭水平方向scrollbar
+		ptable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);       //关闭竖直方向scrollbar
+		ptable->setFocusPolicy(Qt::NoFocus);                              //不能通过tab建或被单击获得焦点
+		ptable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel); //设置鼠标滚轮行为：每像素一步
+		ptable->setSelectionMode(QAbstractItemView::SingleSelection);     //设置选择模式：单选
+		ptable->setRowCount(mTableCtrl.TableRowCount);       //设置列数
+		ptable->setObjectName("table");                      //设置对象名：table
+		ptable->setStyleSheet(QString("#table") + QString(RPW_StyleSheet_TextStr[RPW_Table_Style]));   //设置样式
 
-		QFont font(FontTypeStr[fontorder], RPW_TableText_fsize, QFont::Normal);
-		ptable->setFont(font);
-		ptable->viewport()->installEventFilter(this);
+		QFont font(FontTypeStr[fontorder], RPW_TableText_fsize, QFont::Normal);   //创建新字体
+		ptable->setFont(font);                            //设置所用字体
+		ptable->viewport()->installEventFilter(this);     //？？
 		this->installEventFilter(this);
 		mpTable = ptable;
 		mpTable->show();
@@ -281,7 +281,7 @@ void AimRobotPunctureWidget::CreateTableWdt()
 
 }
 
-void AimRobotPunctureWidget::SetLabelImage(QLabel * plabel, RPW_StrImgOrder order)
+void AimRobotPunctureWidget::SetLabelImage(QLabel * plabel, RPW_StrImgOrder order)    //设置imglabel的图像
 {
 	if (plabel)
 	{
@@ -301,22 +301,22 @@ void AimRobotPunctureWidget::InitTableWdtShow()
 {
 	if (mpTable)
 	{
-		mTableCtrl.TableRowCount = m_pPathList->size();
-		mpTable->setRowCount(mTableCtrl.TableRowCount);
-		for (int i = 0; i < mTableCtrl.TableRowCount; i++)
+		mTableCtrl.TableRowCount = m_pPathList->size();          //根据路径列表中路径个数决定表格行数
+		mpTable->setRowCount(mTableCtrl.TableRowCount);          
+		for (int i = 0; i < mTableCtrl.TableRowCount; i++)       //遍历
 		{
-			mpTable->setRowHeight(i, 30);
-			QTableWidgetItem *pitm = new QTableWidgetItem();
-			pitm->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-			mpTable->setItem(i, 0, pitm);
-			mpTable->setColumnWidth(0, RPW_Table_Width);
-			mpTable->item(i, 0)->setTextColor(QColor(255, 255, 255));
+			mpTable->setRowHeight(i, 30);                                    //设置行高
+			QTableWidgetItem *pitm = new QTableWidgetItem();                 //创建新的表格项
+			pitm->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);        //文本对齐方式：左对齐，垂直方向上居中
+			mpTable->setItem(i, 0, pitm);                                    //将新项添加到表格
+			mpTable->setColumnWidth(0, RPW_Table_Width);                     //设置列宽
+			mpTable->item(i, 0)->setTextColor(QColor(255, 255, 255));        //设置表格项的文字颜色
 
-			float dis = m_pPathList->at(i)->pathDis;
-			QString pathtext = QString("Â·¾¶  ") + QString::number(i + 1);
-			QString path_detail = pathtext + QString("£º") + QString("%1").arg(dis);
-			mTableInfoList.append(path_detail);
-			mpTable->item(i, 0)->setText(path_detail);
+			float dis = m_pPathList->at(i)->pathDis;                         //路径距离
+			QString pathtext = QString("路径  ") + QString::number(i + 1);   //路径标号文字
+			QString path_detail = pathtext + QString("：") + QString("%1").arg(dis);    //路径详情
+			mTableInfoList.append(path_detail);                              //将路径详情添加到表格信息列表
+			mpTable->item(i, 0)->setText(path_detail);                       //设置表格项文本为路径详情
 		}
 	}
 	
@@ -362,51 +362,51 @@ void AimRobotPunctureWidget::ProScrollUpAndDown()
 
 }
 
-void AimRobotPunctureWidget::ProPathAddBtnClickedEvent()
+void AimRobotPunctureWidget::ProPathAddBtnClickedEvent()           //“路径添加”按钮点击事件
 {
-	if (!mTextLabelLt.isEmpty())
+	if (!mTextLabelLt.isEmpty())                               //如果文字label列表不为空
 	{
-		QString pathinfo;
+		QString pathinfo;                                  //定义路径信息变量：pathinfo
 
-		if (mTextLabelLt.at(RPW_PathTitleDetail_Lbl))
+		if (mTextLabelLt.at(RPW_PathTitleDetail_Lbl))      //如果路径已存在，则将旧路径清除
 		{
 			mTextLabelLt.at(RPW_PathTitleDetail_Lbl)->clear();
 		}
-		if (mTextLabelLt.at(RPW_PathMsg_Lbl))
+		if (mTextLabelLt.at(RPW_PathMsg_Lbl))              //如果路径信息label存在
 		{
-			if (mTextLabelLt.at(RPW_PathMsg_Lbl)->text().isEmpty())return;
-			pathinfo = mTextLabelLt.at(RPW_PathMsg_Lbl)->text();
-			mTextLabelLt.at(RPW_PathMsg_Lbl)->clear();
+			if (mTextLabelLt.at(RPW_PathMsg_Lbl)->text().isEmpty())return;         //如果路径信息的文本为空则返回
+			pathinfo = mTextLabelLt.at(RPW_PathMsg_Lbl)->text();             //否则将路径信息文本读入pathinfo
+			mTextLabelLt.at(RPW_PathMsg_Lbl)->clear();                       //清除路径信息label
 		}
-		if (mpTable)
+		if (mpTable)                                      //如果有表格
 		{
-			this->AddOnePathToTableWdt(&pathinfo);
-			mTableInfoList.append(pathinfo);
+			this->AddOnePathToTableWdt(&pathinfo);    //添加一条路径到表格部件
+			mTableInfoList.append(pathinfo);          //将路径信息添加到表格信息列表
 		}
 	}
 }
 
-void AimRobotPunctureWidget::ProPathClearBtnClickedEvent()
+void AimRobotPunctureWidget::ProPathClearBtnClickedEvent()       //“路径清除”按钮点击事件
 {
-	if (mpTable)
+	if (mpTable)                             //如果表格存在
 	{
-		mpTable->setRowCount(0);
-		emit SendPathClearMsg();
+		mpTable->setRowCount(0);         //将表格行数置零
+		emit SendPathClearMsg();         //发送路径清除信息
 	}
 }
 
-void AimRobotPunctureWidget::ProPathDeleteBtnClickedEvent()
+void AimRobotPunctureWidget::ProPathDeleteBtnClickedEvent()       //“路径删除”按钮点击事件
 {
-	if (mpTable)
+	if (mpTable)                                              //如果表格存在
 	{
-		int curSelectedRow = mpTable->currentRow();
-		if (curSelectedRow != -1)
+		int curSelectedRow = mpTable->currentRow();       //读取当前所选行
+		if (curSelectedRow != -1)                         //如果当前所选行不为-1，即表格存在项
 		{
-			mTableInfoList.removeAt(curSelectedRow);
-			mTableCtrl.TableRowCount--;
-			mpTable->setRowCount(mTableCtrl.TableRowCount);
+			mTableInfoList.removeAt(curSelectedRow);  //将所选行从表格信息列表中移除
+			mTableCtrl.TableRowCount--;               //表格列数减1
+			mpTable->setRowCount(mTableCtrl.TableRowCount);    
 
-			for (int i = 0; i < mTableCtrl.TableRowCount; i++)
+			for (int i = 0; i < mTableCtrl.TableRowCount; i++)               //重写表格并更新
 			{
 				mpTable->setRowHeight(i, 30);
 				QTableWidgetItem *pitm = new QTableWidgetItem();
@@ -418,59 +418,59 @@ void AimRobotPunctureWidget::ProPathDeleteBtnClickedEvent()
 			}
 			mpTable->update();
 
-			emit SendPathDeleteMsg(curSelectedRow);
+			emit SendPathDeleteMsg(curSelectedRow);                    //发送路径删除信息
 		}
 	}
 	
 }
 
-void AimRobotPunctureWidget::AddOnePathToTableWdt(QString * pathinfo)
+void AimRobotPunctureWidget::AddOnePathToTableWdt(QString * pathinfo)             //添加一条路径到表格
 {
-	mTableCtrl.TableRowCount = mpTable->rowCount();
-	mTableCtrl.TableRowCount++;
-	mpTable->setRowCount(mTableCtrl.TableRowCount);
+	mTableCtrl.TableRowCount = mpTable->rowCount();          //读取表格当前行数
+	mTableCtrl.TableRowCount++;                              //行数加1
+	mpTable->setRowCount(mTableCtrl.TableRowCount);          //设置表格行数
 	
-	int curRowIdx = mTableCtrl.TableRowCount - 1;
-	mpTable->setRowHeight(curRowIdx, 30);
-	QTableWidgetItem *pitm = new QTableWidgetItem();
-	pitm->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-	mpTable->setItem(curRowIdx, 0, pitm);
-	mpTable->setColumnWidth(0, RPW_Table_Width);
+	int curRowIdx = mTableCtrl.TableRowCount - 1;            //当前行索引=表格行数-1
+	mpTable->setRowHeight(curRowIdx, 30);                    //设置行高
+	QTableWidgetItem *pitm = new QTableWidgetItem();         //创建新表格项
+	pitm->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);//设置文本对齐方式
+	mpTable->setItem(curRowIdx, 0, pitm);                    //添加新项
+	mpTable->setColumnWidth(0, RPW_Table_Width);             //设置列宽
 	
-	mpTable->item(curRowIdx, 0)->setTextColor(QColor(255, 255, 255));
-	mpTable->item(curRowIdx, 0)->setText(*pathinfo);
+	mpTable->item(curRowIdx, 0)->setTextColor(QColor(255, 255, 255));     //设置新项文本颜色
+	mpTable->item(curRowIdx, 0)->setText(*pathinfo);                      //设置文本
 
-	mpTable->update();
+	mpTable->update();           //更新表格
 
 }
 
-void AimRobotPunctureWidget::AimPushBtnClick(int index, E_BTN_SATUS_TYPE Type)
+void AimRobotPunctureWidget::AimPushBtnClick(int index, E_BTN_SATUS_TYPE Type)      //目标按钮点击：索引，类型
 {
 	switch (index)
 	{
-	case RPW_SetTargetPt_Btn:
+	case RPW_SetTargetPt_Btn:                                       //如果是设置靶点按钮
 	{
-		emit SendPathAddEventType(RPW_SetTargetPt);
+		emit SendPathAddEventType(RPW_SetTargetPt);             //发送路径添加事件类型（设置靶点）
 	}break;
-	case RPW_SetIntoPt_Btn:
+	case RPW_SetIntoPt_Btn:                                         //如果是设置入针点按钮
 	{
-		emit SendPathAddEventType(RPW_SetIntoPt);
+		emit SendPathAddEventType(RPW_SetIntoPt);               //发送路径添加事件类型（设置入针点）
 	}break;
-	case RPW_Clear_Btn:
+	case RPW_Clear_Btn:                                             //如果是清除按钮
 	{
-		ProPathClearBtnClickedEvent();
+		ProPathClearBtnClickedEvent();                          //发送路径清除信息
 	}break;
-	case RPW_Done_Btn:
+	case RPW_Done_Btn:                                              //如果是完成按钮
 	{
-		emit SendDoneMsg();
+		emit SendDoneMsg();                                     //发送完成信息
 	}break;
-	case RPW_AddPath_Btn:
+	case RPW_AddPath_Btn:                                           //如果是添加路径按钮
 	{
-		ProPathAddBtnClickedEvent();
+		ProPathAddBtnClickedEvent();                            //执行路径添加点击事件
 	}break;
-	case RPW_DeletePath_Btn:
+	case RPW_DeletePath_Btn:                                        //如果是删除路径按钮
 	{
-		ProPathDeleteBtnClickedEvent();
+		ProPathDeleteBtnClickedEvent();                         //执行路径删除点击事件
 	}break;
 	default:
 		break;
