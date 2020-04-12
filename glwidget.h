@@ -54,11 +54,11 @@ class GLWidget;//just for render
 #define TEXTURE_SIZE 3 //texture handle size
 
 
-enum E_TEXTINFO_IDX{
-    INFO_TYPE =0,
-    INFO_WINWIDTH,
-    INFO_WINCENTER,
-    INFO_ORDER
+enum E_TEXTINFO_IDX{      //名字是什么意义？？
+    INFO_TYPE =0,          //信息——类型
+    INFO_WINWIDTH,         //信息——窗口宽度
+    INFO_WINCENTER,        //信息——窗口中心
+    INFO_ORDER             //信息——顺序
 };
 class Renderer : public QObject, protected QOpenGLFunctions
 {
@@ -366,7 +366,7 @@ protected:
     T_DImgPropety mImgpty;
     DICOMPropertyData *mDVolumpty;
 	T_DImageWindowCtrl *mImgWCCtrl;
-    MainData *mpData;
+    MainData *mpData;                    //MainData是什么类型，mpData存储什么信息
     float m_ImgXYRatio;
 
 
