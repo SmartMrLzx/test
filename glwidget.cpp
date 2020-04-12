@@ -338,25 +338,25 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *)
 {
     PushResetImgSizeLocationMsg();
 }
-void GLWidget::mousePressEvent(QMouseEvent *event)
+void GLWidget::mousePressEvent(QMouseEvent *event)                   //重新实现鼠标点击事件
 {
 
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton)                           //如果是鼠标左键
     {
-        m_bMouseTranslate = true;
-        m_LastMousePos = event->pos();
-        emit PushMousePressMsg();
+        m_bMouseTranslate = true;                                    //？？
+        m_LastMousePos = event->pos();                               //存储鼠标的位置
+        emit PushMousePressMsg();                                    //发送信号
 
-		if (mpData)
+		if (mpData)                                          //？？mpData是什么
 		{
-			QList<T_LastGLPressPtCtrl*>* pressptlt = 
-				mpData->GetGLWdtLatestPressedPt();
+			QList<T_LastGLPressPtCtrl*>* pressptlt =     //读入最后点下的点
+				mpData->GetGLWdtLatestPressedPt();   //
 
-			if (!pressptlt->isEmpty())
+			if (!pressptlt->isEmpty())                   //如果点列表不为空
 			{
-				T_LastGLPressPtCtrl* pt = pressptlt->last();
-				QPoint oldpt = pt->pos;
-				QPoint newpt;
+				T_LastGLPressPtCtrl* pt = pressptlt->last();       //读取点列表最后一个点
+				QPoint oldpt = pt->pos;                            //创建oldpt读取点的位置
+				QPoint newpt;                                      //创建newpt
 				if ((m_LastMousePos.x()>=(oldpt.x()-3))&& (m_LastMousePos.x() <= (oldpt.x() + 3)))
 				{
 					mIsSelectXLine = true;
