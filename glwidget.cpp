@@ -357,46 +357,46 @@ void GLWidget::mousePressEvent(QMouseEvent *event)                   //重新实
 				T_LastGLPressPtCtrl* pt = pressptlt->last();       //读取点列表最后一个点
 				QPoint oldpt = pt->pos;                            //创建oldpt读取点的位置
 				QPoint newpt;                                      //创建newpt
-				if ((m_LastMousePos.x()>=(oldpt.x()-3))&& (m_LastMousePos.x() <= (oldpt.x() + 3)))
-				{
-					mIsSelectXLine = true;
+				if ((m_LastMousePos.x()>=(oldpt.x()-3))&& (m_LastMousePos.x() <= (oldpt.x() + 3)))        //如果鼠标新的x坐标与旧的坐标
+				{                                                                                         //差值小于正负3
+					mIsSelectXLine = true;                     //选中x线
 				}
-				if ((m_LastMousePos.y() >= (oldpt.y() - 3)) && (m_LastMousePos.y() <= (oldpt.y() + 3)))
+				if ((m_LastMousePos.y() >= (oldpt.y() - 3)) && (m_LastMousePos.y() <= (oldpt.y() + 3)))   //同理
 				{
-					mIsSelectYLine = true;
+					mIsSelectYLine = true;                 //选中y线
 				}
 			}
 
-			T_SelectDragLineCtrl* dragctrl = mpData->GetCurSelectDragCtrl();
-			dragctrl->dragImgType = this->mImgpty.imgtype;
-			dragctrl->selectXline = mIsSelectXLine;
-			dragctrl->selectYline = mIsSelectYLine;
+			T_SelectDragLineCtrl* dragctrl = mpData->GetCurSelectDragCtrl();           //选择拖动线控制
+			dragctrl->dragImgType = this->mImgpty.imgtype;            //拖动图像类型
+			dragctrl->selectXline = mIsSelectXLine;                   //选择x线
+			dragctrl->selectYline = mIsSelectYLine;                   //选择y线
 		}
 		
 		QPoint point;
-		if (mIsSelectXLine || mIsSelectYLine)
+		if (mIsSelectXLine || mIsSelectYLine)             //如果选择x线或y线
 		{
-			if (mIsSelectXLine != mIsSelectYLine)
+			if (mIsSelectXLine != mIsSelectYLine)     //如果只选一条线
 			{
 				QList<T_LastGLPressPtCtrl*>* pressptlt =
-					mpData->GetGLWdtLatestPressedPt();
-				T_LastGLPressPtCtrl* recordptctrl = pressptlt->last();
-				QPoint recordpt = recordptctrl->pos;
-
-				if (mIsSelectXLine)
+					mpData->GetGLWdtLatestPressedPt();       //读取最近按下的点
+				T_LastGLPressPtCtrl* recordptctrl = pressptlt->last();      //读取相关控制
+				QPoint recordpt = recordptctrl->pos;         //创建用于记录的点
+      
+				if (mIsSelectXLine)                //如果是xline
 				{
-					point.setY(recordpt.y());
-					point.setX(m_LastMousePos.x());
+					point.setY(recordpt.y());           //设置y坐标
+					point.setX(m_LastMousePos.x());     //
 				}
-				else
+				else                               //如果是yline
 				{
 					point.setY(m_LastMousePos.y());
 					point.setX(recordpt.x());
 				}
 			}
-			else
+			else              //如果两条线都选了
 			{
-				point = event->pos();
+				point = event->pos();     //直接读取点的位置
 			}
 		}
 		else
@@ -405,17 +405,17 @@ void GLWidget::mousePressEvent(QMouseEvent *event)                   //重新实
 		}
 
 
-	    ProSliceTranslateEvent(point);
+	    ProSliceTranslateEvent(point);      //执行切面翻译事件
 	 
 
 
 		//ProSliceTranslateEvent(m_LastMousePos);
 
-		mIsMouseMove = true;
+		mIsMouseMove = true;       //鼠标移动判据置为真
 
-        switch(m_sCurMarkAction)
+        switch(m_sCurMarkAction)           //当前的标记动作
         {
-            case E_MarkAction::MARK_ROI:
+            case E_MarkAction::MARK_ROI:      //标记ROI
             {
 			/*	if (m_pConList == NULL)
 				{
@@ -436,10 +436,10 @@ void GLWidget::mousePressEvent(QMouseEvent *event)                   //重新实
             }break;
 
 	
-			case E_MarkAction::MARK_NONE:
+			case E_MarkAction::MARK_NONE:        //什么都不标记
 			{
-				QPoint ImPoint(event->pos());
-				QPointF RealPoint(0, 0);
+				QPoint ImPoint(event->pos());    //ImPoint是什么函数
+				QPointF RealPoint(0, 0);         //RealPoint是什么函数
 				if (m_renderer->ProcessOpenglCalculation(&ImPoint, &RealPoint, CAL_SCREENTOGL))
 				{
 					//if (GLToImage(RealPoint, ImPoint))
@@ -1609,28 +1609,28 @@ MainData * GLWidget::GetMainData()
 	return this->mpData;
 }
 
-void GLWidget::ProSliceTranslateEvent(QPoint point)
+void GLWidget::ProSliceTranslateEvent(QPoint point)       //执行切面翻译事件
 {
 	if (mIsRenderLine)
 	{
-		T_LastGLPressPtCtrl* ptctrl = new T_LastGLPressPtCtrl;
-		ptctrl->imagetype = this->mImgpty.imgtype;
-		ptctrl->pos = point;
-		QList<T_LastGLPressPtCtrl*>* pressptlt = mpData->GetGLWdtLatestPressedPt();
-		T_SelectDragLineCtrl* draglinectrl = mpData->GetCurSelectDragCtrl();
+		T_LastGLPressPtCtrl* ptctrl = new T_LastGLPressPtCtrl;        //创建新的控制参数
+		ptctrl->imagetype = this->mImgpty.imgtype;                    //读取切面类型
+		ptctrl->pos = point;          //读取点的位置
+		QList<T_LastGLPressPtCtrl*>* pressptlt = mpData->GetGLWdtLatestPressedPt();      //获取最新按下的点
+		T_SelectDragLineCtrl* draglinectrl = mpData->GetCurSelectDragCtrl();             //拖线控制
 
-		switch (mImgpty.imgtype)
+		switch (mImgpty.imgtype)      //切面类型
 		{
 		case Axial:
 		{
-			int width = this->width();
-			int height = this->height();
+			int width = this->width();        //读取宽度
+			int height = this->height();      //读取高度
 
-			if (draglinectrl->selectXline || draglinectrl->selectYline)
+			if (draglinectrl->selectXline || draglinectrl->selectYline)           //如果选中xline或者yline
 			{
-				if (draglinectrl->selectXline != draglinectrl->selectYline)
+				if (draglinectrl->selectXline != draglinectrl->selectYline)   //xline 不等于 yline
 				{
-					int* idx;
+					int* idx;                         
 					if (draglinectrl->selectXline)
 					{
 						idx = GetSelectDragLineSliceIdx(draglinectrl->dragImgType, 0);
